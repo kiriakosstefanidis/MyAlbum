@@ -38,7 +38,7 @@
 <h3>Πρόσθεσε την φωτογραφία σου!</h3>
 
 <div>
-    <form action="insertpage.jsp" method="POST">
+    <form action="insertpage.jsp" method="POST"">
 
         <label>Θεματική ενότητα</label>
         <input type="text" name="title">

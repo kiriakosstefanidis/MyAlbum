@@ -39,7 +39,11 @@
             padding: 14px 16px;
             text-decoration: none;
         }
-
+        .menubar a:hover{
+            border-radius: 20%;
+            transition: 0.1s ease-in-out;
+            background-color: #666058;
+        }
 
 
         /* Create two unequal columns that floats next to each other */
@@ -104,8 +108,9 @@
 </div>
 
 <div class="menubar">
+    <a href="/">ΑΡΧΙΚΗ</a>
     <a href="/InsertPage">ΠΡΟΣΘΗΚΗ</a>
-    <a href="#">ΠΡΟΒΟΛΗ</a>
+    <a href="/DisplayPage">ΠΡΟΒΟΛΗ</a>
 
 </div>
 

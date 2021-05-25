@@ -1,5 +1,7 @@
 package com.example.Albumproject;
 
+import com.mysql.cj.jdbc.Blob;
+
 import java.util.Date;
 
 public class Image {
@@ -68,6 +70,4 @@ public class Image {
     public void setImagepath(String imagepath) {
         this.imagepath = imagepath;
     }
-
-
 }
