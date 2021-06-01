@@ -40,15 +40,13 @@ public class InsertPageServlet extends HttpServlet {
                     "        body {\n" +
                     "            font-family: Arial;\n" +
                     "            padding: 20px;\n" +
-                    "            background: #f1f1f1;\n" +
-                    "        }\n" +
+                    "            background: #f1f1f1;\n" + "        }\n" +
                     "\n" +
                     "\n" +
                     "        .header {\n" +
                     "            padding: 30px;\n" +
                     "            text-align: center;\n" +
-                    "            background: white;\n" +
-                    "        }\n" +
+                    "            background: white;\n" + "        }\n" +
                     "\n" +
                     "        .header h1 {\n" +
                     "            font-size: 50px;\n" +
@@ -128,6 +126,33 @@ public class InsertPageServlet extends HttpServlet {
                     "                width: 100%;\n" +
                     "            }\n" +
                     "        }\n" +
+                    "input[type=text],[type=datetime],[type=float], select {\n" +
+                    "  width: 100%;\n" +
+                    "  padding: 12px 20px;\n" +
+                    "  margin: 8px 0;\n" +
+                    "  display: inline-block;\n" +
+                    "  border: 1px solid #ccc;\n" +
+                    "  border-radius: 4px;\n" +
+                    "  box-sizing: border-box;\n" +
+                    "}\n" +
+                    "\n" +
+                    "input[type=submit] {\n" +
+                    "  width: 100%;\n" +
+                    "  background-color: #4CAF50;\n" +
+                    "  color: white;\n" +
+                    "  padding: 14px 20px;\n" +
+                    "  margin: 8px 0;\n" +
+                    "  border: none;\n" +
+                    "  border-radius: 4px;\n" +
+                    "  cursor: pointer;\n" +
+                    "}\n" +
+                    "\n" +
+                    "input[type=submit]:hover {\n" +
+                    "  background-color: #45a049;\n" +
+                    "  transition: 1s;"+
+                    "}\n" +
+                    "\n" +
+
                     "    </style>" +
                     "<body>\n" +
                     "<body>\n" +

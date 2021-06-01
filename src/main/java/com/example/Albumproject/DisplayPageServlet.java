@@ -154,7 +154,7 @@ public class DisplayPageServlet extends HttpServlet {
                     "/* Expanding image text */\n" +
                     "#imgtext {\n" +
                     "  position: absolute;\n" +
-                    "  bottom: 15px;\n" +
+                    "  bottom: 415px;\n" +
                     "  left: 15px;\n" +
                     "  color: white;\n" +
                     "  font-size: 20px;\n" +
@@ -175,6 +175,14 @@ public class DisplayPageServlet extends HttpServlet {
                     "        width: 100%;\n" +
                     "        /* The width is the width of the web page */\n" +
                     "      }"+
+                    "form {\n" +
+                    "  text-align : center;\n"+
+                    "  width: 100%;\n" +
+                    "  padding: 16px 20px;\n" +
+                    "  border: none;\n" +
+                    "  border-radius: 4px;\n" +
+                    "  background-color: #f1f1f1;\n" +
+                    "}"+
                     "    </style>\n" +
                     "</head>");
                     out.print("<body>\n" +
@@ -192,13 +200,72 @@ public class DisplayPageServlet extends HttpServlet {
                     "\n" +
                     "\n" +
                     "");
+                    try {
+                        DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+                        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mywebapp2021", "root", "root");
+                        Statement stmt1 = conn.createStatement();
+                        ResultSet rs1 = stmt1.executeQuery("select distinct title from images");
+
+                        out.print("<form action=\"/DisplayPage\">\n" +
+                                "  <label for=\"display\">ΚΑΤΗΓΟΡΙΑ:</label>\n" +
+                                "  <select name=\"display\" id=\"display\" >\n" +
+                                "  <option disabled selected value> Διάλεξε ένα απο τα παρακάτω </option>");
+                        while (rs1.next())
+                        {
+                            String title = rs1.getString("title");
+                            out.print("<option value=\""+title+"\">"+title+"</option>");
+                        }
+                                out.print("  <input type=\"submit\" value=\"ΕΦΑΡΜΟΓΗ\">\n" +
+                                "</form>");
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
             try {
                 DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
                 Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/mywebapp2021", "root", "root");
-                Statement stmt = con.createStatement();
-                ResultSet rs = stmt.executeQuery("select * from images");
-                out.print("<div class=\"row\">");
-                while (rs.next()) {
+                String parameter = request.getParameter("display");
+                if(parameter == null){
+                    PreparedStatement stmt = con.prepareStatement("select * from images");
+                    ResultSet rs= stmt.executeQuery();
+                    out.print("<div class=\"row\">");
+                    while (rs.next()) {
+                        String title = rs.getString("title");
+                        String tags = rs.getString("tags");
+                        Float latitude = rs.getFloat("latitude");
+                        Float longtitude = rs.getFloat("longtitude");
+                        String date = rs.getString("date");
+                        String imagepath = rs.getString("imagepath");
+                        out.print("<div class=\"column\">\n" +
+                                "    <img src=\""+imagepath+"\" alt=\"Τίτλος:"+title+" \n Συμμετέχοντες:"+tags+" \n Ημερομηνία:"+date+"\" style=\"width:100%\" onclick=\"myFunction(this); initMap("+longtitude+","+latitude+");\">\n" +
+                                "  </div>" );
+
+
+                    }
+                }else {
+                    PreparedStatement stmt = con.prepareStatement("select * from images where title= ?");
+                    stmt.setString(1,parameter);
+                    ResultSet rs= stmt.executeQuery();
+                    out.print("<p style=\"text-align:center\">ΚΑΤΗΓΟΡΊΑ : "+parameter+"</p>");
+                    out.print("<div class=\"row\">");
+                    while (rs.next()) {
+                        String title = rs.getString("title");
+                        String tags = rs.getString("tags");
+                        Float latitude = rs.getFloat("latitude");
+                        Float longtitude = rs.getFloat("longtitude");
+                        String date = rs.getString("date");
+                        String imagepath = rs.getString("imagepath");
+                        out.print("<div class=\"column\">\n" +
+                                "    <img src=\""+imagepath+"\" alt=\"Τίτλος:"+title+" \n Συμμετέχοντες:"+tags+" \n Ημερομηνία:"+date+"\" style=\"width:100%\" onclick=\"myFunction(this); initMap("+longtitude+","+latitude+");\">\n" +
+                                "  </div>" );
+
+
+                    }
+                }
+                //ResultSet rs = stmt.executeQuery("select ? from images");
+                //stmt.setString(1,parameter);
+                //ResultSet rs= stmt.executeQuery();
+                //out.print("<div class=\"row\">");
+                /*while (rs.next()) {
                     String title = rs.getString("title");
                     String tags = rs.getString("tags");
                     Float latitude = rs.getFloat("latitude");
@@ -210,7 +277,7 @@ public class DisplayPageServlet extends HttpServlet {
                             "  </div>" );
 
 
-                    }
+                    }*/
 
                     out.print("\n" +
                             "</div>\n"+
@@ -218,6 +285,27 @@ public class DisplayPageServlet extends HttpServlet {
                                     "  <span onclick=\"this.parentElement.style.display='none'\" class=\"closebtn\">&times;</span>\n" +
                                     "  <img id=\"expandedImg\" style=\"width:100%\">\n" +
                                     "  <div id=\"imgtext\"></div>\n" +
+                            "<div id=\"map\"></div>"+
+                            "<script\n" +
+                            "      src=\"https://maps.googleapis.com/maps/api/js?key=AIzaSyCgxVBaIkbBvQWyruAO8TMWBytArrYG_R8&callback=initMap&libraries=&v=weekly\"\n" +
+                            "      async\n" +
+                            "    ></script>\n" +
+                            "\t    <script>\n" +
+                            "      \n" +
+                            "      function initMap(p1,p2) {\n" +
+                            "        const pic = { lat: p1, lng: p2 };\n" +
+                            "        \n" +
+                            "        const map = new google.maps.Map(document.getElementById(\"map\"), {\n" +
+                            "          zoom: 13,\n" +
+                            "          center: pic,\n" +
+                            "        });\n" +
+                            "        \n" +
+                            "        const marker = new google.maps.Marker({\n" +
+                            "          position: pic,\n" +
+                            "          map: map,\n" +
+                            "        });\n" +
+                            "      }\n" +
+                            "    </script>"+
                             "</div>\n" +
                             "\n" +
                             "<script>\n" +
@@ -230,27 +318,6 @@ public class DisplayPageServlet extends HttpServlet {
                             "}\n" +
                             "</script>"+
                             "</div>\n" +
-                            "<div id=\"map\"></div>"+
-                            "<script\n" +
-                            "      src=\"https://maps.googleapis.com/maps/api/js?key=AIzaSyCgxVBaIkbBvQWyruAO8TMWBytArrYG_R8&callback=initMap&libraries=&v=weekly\"\n" +
-                            "      async\n" +
-                            "    ></script>\n" +
-                            "\t    <script>\n" +
-                            "      \n" +
-                            "      function initMap(p1,p2) {\n" +
-                            "        const pic = { lat: p1, lng: p2 };\n" +
-                            "        \n" +
-                            "        const map = new google.maps.Map(document.getElementById(\"map\"), {\n" +
-                            "          zoom: 4,\n" +
-                            "          center: pic,\n" +
-                            "        });\n" +
-                            "        \n" +
-                            "        const marker = new google.maps.Marker({\n" +
-                            "          position: pic,\n" +
-                            "          map: map,\n" +
-                            "        });\n" +
-                            "      }\n" +
-                            "    </script>"+
 
                     "</div>\n" +
                     "\n");
@@ -264,8 +331,6 @@ public class DisplayPageServlet extends HttpServlet {
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        } finally {
-            out.close();
         }
 
     }
